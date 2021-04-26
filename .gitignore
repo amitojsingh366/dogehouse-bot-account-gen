@@ -7,4 +7,6 @@
 .env
 
 node_modules
+dist
+
 tokens.json
