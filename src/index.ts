@@ -8,6 +8,8 @@ import path from 'path';
 
 dotenv.config()
 
+const TOKEN_PATH = path.join(__dirname, "../tokens.json");
+
 let rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -43,8 +45,7 @@ async function start() {
                 axios.post("https://api.dogehouse.tv/bot/auth", { apiKey: data.apiKey }).then((resp) => {
                     if (resp.data) {
                         resp.data.apiKey = data.apiKey;
-                        fs.writeFileSync(path.join(__dirname, "../tokens.json"), JSON.stringify(resp.data));
-                        console.log(`Your token refresh token and apiKey are stored in ${path.join(__dirname, "../tokens.json")}`);
+                        saveTokens(resp.data, ans);
                     } else {
                         console.log('Encountered an error, please try again later, 1');
                         process.exit();
@@ -68,6 +69,23 @@ async function start() {
         }
 
     })
+}
+
+function saveTokens(tokens: any, username: string) {
+    let data = {}
+    if (fs.existsSync(TOKEN_PATH)) {
+        let d = fs.readFileSync(TOKEN_PATH).toString();
+        if (d) {
+            data = JSON.parse(d);
+        }
+        data[username] = tokens;
+    } else {
+        data = { [username]: tokens }
+    }
+
+    fs.writeFileSync(TOKEN_PATH, JSON.stringify(data));
+    console.log(`Your token refresh token and apiKey are stored in ${TOKEN_PATH}`);
+    process.exit();
 }
 
 
