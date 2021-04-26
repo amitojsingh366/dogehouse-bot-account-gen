@@ -1,0 +1,32 @@
+{
+  "name": "dogehouse-bot-account-gen",
+  "version": "1.0.0",
+  "description": "Make it simpler for users to make bot accounts",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "tsc",
+    "launch": "node dist/index.js",
+    "start": "yarn compile && yarn launch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitojsingh366/dogehouse-bot-account-gen.git"
+  },
+  "keywords": [
+    "Dogehouse",
+    "Bot",
+    "Bot",
+    "account"
+  ],
+  "author": "Amitoj Singh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amitojsingh366/dogehouse-bot-account-gen/issues"
+  },
+  "homepage": "https://github.com/amitojsingh366/dogehouse-bot-account-gen#readme",
+  "dependencies": {
+    "@dogehouse/kebab": "^0.2.7",
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0"
+  }
+}
