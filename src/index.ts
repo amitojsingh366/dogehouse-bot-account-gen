@@ -10,6 +10,13 @@ dotenv.config()
 
 const TOKEN_PATH = path.join(__dirname, "../tokens.json");
 
+type CreateBotResponse = {
+    apiKey: string | null,
+    isUsernameTaken: boolean | null,
+    error: string | null
+}
+
+
 let rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -39,7 +46,8 @@ try {
 async function start() {
     rl.question("Enter a username to register: ", async (ans) => {
         try {
-            let data = await wrapper.mutation.userCreateBot(ans);
+            // @ts-ignore
+            let data: CreateBotResponse = await wrapper.mutation.userCreateBot(ans);
             if (data.apiKey) {
                 console.log(data)
                 axios.post("https://api.dogehouse.tv/bot/auth", { apiKey: data.apiKey }).then((resp) => {

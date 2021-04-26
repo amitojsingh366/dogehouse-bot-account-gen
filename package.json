@@ -28,5 +28,8 @@
     "@dogehouse/kebab": "^0.2.7",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
   }
 }
