@@ -44,32 +44,57 @@ try {
 
 
 async function start() {
+    console.log("[0] Make a new bot account\n[1] Get tokens for existing account (requires apiKey)")
+    rl.question("Choose an option: ", (ans) => {
+        switch (ans) {
+            case "0":
+                makeNewAcc();
+                break;
+
+            case "1":
+                rl.question("Enter your apiKey: ", (ans) => {
+                    getTokens(ans);
+                })
+                break;
+
+            default:
+                console.log("Invalid option");
+                start();
+                break;
+        }
+    })
+}
+
+async function getTokens(apikey: string) {
+    axios.post("https://api.dogehouse.tv/bot/auth",
+        {
+            apiKey: apikey
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then((resp) => {
+            if (resp.data) {
+                resp.data.apiKey = apikey;
+                saveTokens(resp.data, resp.data.username || apikey);
+            } else {
+                console.log('Encountered an error, please try again later, 1');
+                process.exit();
+            }
+        }).catch(() => {
+            console.log('Encountered an error, please try again later, 2');
+            process.exit();
+        })
+}
+
+async function makeNewAcc() {
     rl.question("Enter a username to register: ", async (ans) => {
         try {
             // @ts-ignore
             let data: CreateBotResponse = await wrapper.mutation.userCreateBot(ans);
             if (data.apiKey) {
-                console.log(data)
-                axios.post("https://api.dogehouse.tv/bot/auth",
-                    {
-                        apiKey: data.apiKey
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    }).then((resp) => {
-                        if (resp.data) {
-                            resp.data.apiKey = data.apiKey;
-                            saveTokens(resp.data, ans);
-                        } else {
-                            console.log('Encountered an error, please try again later, 1');
-                            process.exit();
-                        }
-                    }).catch(() => {
-                        console.log('Encountered an error, please try again later, 2');
-                        process.exit();
-                    })
+                getTokens(data.apiKey);
             }
             if (data.isUsernameTaken) {
                 console.log(`The username "${ans}" is already taken`);
@@ -101,6 +126,7 @@ function saveTokens(tokens: any, username: string) {
 
     fs.writeFileSync(TOKEN_PATH, JSON.stringify(data));
     console.log(`Your token refresh token and apiKey are stored in ${TOKEN_PATH}`);
+    console.log(`TIP: After first launch you can use "yarn launch" and it should startup faster than before`);
     process.exit();
 }
 
