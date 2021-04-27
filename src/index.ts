@@ -50,18 +50,26 @@ async function start() {
             let data: CreateBotResponse = await wrapper.mutation.userCreateBot(ans);
             if (data.apiKey) {
                 console.log(data)
-                axios.post("https://api.dogehouse.tv/bot/auth", { apiKey: data.apiKey }).then((resp) => {
-                    if (resp.data) {
-                        resp.data.apiKey = data.apiKey;
-                        saveTokens(resp.data, ans);
-                    } else {
-                        console.log('Encountered an error, please try again later, 1');
+                axios.post("https://api.dogehouse.tv/bot/auth",
+                    {
+                        apiKey: data.apiKey
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    }).then((resp) => {
+                        if (resp.data) {
+                            resp.data.apiKey = data.apiKey;
+                            saveTokens(resp.data, ans);
+                        } else {
+                            console.log('Encountered an error, please try again later, 1');
+                            process.exit();
+                        }
+                    }).catch(() => {
+                        console.log('Encountered an error, please try again later, 2');
                         process.exit();
-                    }
-                }).catch(() => {
-                    console.log('Encountered an error, please try again later, 2');
-                    process.exit();
-                })
+                    })
             }
             if (data.isUsernameTaken) {
                 console.log(`The username "${ans}" is already taken`);
