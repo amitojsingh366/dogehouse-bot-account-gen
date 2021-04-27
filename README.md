@@ -1,5 +1,7 @@
 # dogehouse-bot-account-gen
 
+## This repo is now archived as `@dogehouse/kebab` has this inbuilt partially
+
 ### Follow the steps below to get your bot account
 
 - Go to DogeHouse
